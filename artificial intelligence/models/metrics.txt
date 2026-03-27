@@ -1,0 +1,5 @@
+Accuracy: 0.8525
+Confusion Matrix:
+[[25  4]
+ [ 5 27]]
+ROC-AUC Score: 0.9181

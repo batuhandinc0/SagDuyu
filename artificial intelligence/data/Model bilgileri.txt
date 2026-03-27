@@ -1,0 +1,17 @@
+XGBoost_heart.csv
+
+Harika sorular! Modelin performansını ve güvenilirliğini inceleyelim:
+
+1) Modelin Doğruluk Oranı (Accuracy): Modelin test verisi üzerindeki doğruluk oranı %85.25'tir. Bu, modelin her 100 hastadan 85'ini doğru teşhis ettiğini gösterir. Tıp alanında tek bir modele dayalı karar verilmediği için bu oran, bir ön eleme veya destek sistemi olarak gayet başarılıdır.
+
+2) Model Gerçekten Çalışıyor mu yoksa Ezberledi mi (Overfitting)? Modeliniz ezberlememiştir, gerçekten öğrenmiştir. Bunu şu kanıtlarla söyleyebiliriz:
+
+Test Verisi Başarısı: Bu sonuçlar (%85.25 Doğruluk, 0.9181 ROC-AUC), modelin eğitim sırasında hiç görmediği %20'lik "Test Verisi" üzerinde alınmıştır. Eğer model ezberlemiş olsaydı, eğitim verisinde %100'e yakın başarı gösterirken, hiç görmediği bu test verisinde çok düşük başarı gösterirdi (örneğin %50-60).
+ROC-AUC Skoru (0.9181): 0.90 üzerindeki bir ROC-AUC skoru "Mükemmel" seviye kabul edilir. Bu skor, modelin "Hasta" ve "Sağlıklı" sınıflarını birbirinden ne kadar iyi ayırabildiğini gösterir. Ezberleyen bir modelde bu skor test verisinde genellikle düşük çıkar.
+Confusion Matrix (Hata Matrisi):
+25 Sağlıklı kişiyi doğru bilmiş.
+27 Hasta kişiyi doğru bilmiş.
+Sadece 4 Sağlıklı kişiye yanlışlıkla hasta demiş (False Positive).
+Sadece 5 Hasta kişiye yanlışlıkla sağlıklı demiş (False Negative).
+Hataların dengeli dağılması da modelin belirli bir sınıfa (sadece hastalara veya sadece sağlıklılara) odaklanıp ezber yapmadığını gösterir.
+Özetle: Modeliniz verilerdeki örüntüleri (pattern) başarıyla öğrenmiş ve yeni gelen veriler üzerinde genelleme yapabilmektedir. Güvenle kullanabilirsiniz.

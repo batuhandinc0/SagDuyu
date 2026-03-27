@@ -1,0 +1,566 @@
+:root {
+    /* OKÜ ve Medikal Tema Renkleri */
+    --primary-color: #2563eb;
+    /* Royal Blue */
+    --primary-dark: #1e40af;
+    --secondary-color: #059669;
+    /* Medical Green */
+    --accent-color: #7c3aed;
+    /* Fusion Purple */
+
+    --bg-body: #f8fafc;
+    --bg-surface: #ffffff;
+
+    --text-main: #0f172a;
+    --text-secondary: #475569;
+
+    --radius-lg: 1rem;
+    --header-height: 80px;
+}
+
+.landing-page-wrapper * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.landing-page-wrapper {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.landing-page-wrapper a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.landing-page-wrapper ul {
+    list-style: none;
+}
+
+.landing-page-wrapper .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* --- Header --- */
+.landing-page-wrapper .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: var(--header-height);
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+}
+
+.landing-page-wrapper .nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.landing-page-wrapper .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.landing-page-wrapper .logo span {
+    color: var(--primary-color);
+}
+
+.landing-page-wrapper .nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.landing-page-wrapper .nav-link {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.landing-page-wrapper .nav-link:hover {
+    color: var(--primary-color);
+}
+
+.landing-page-wrapper .tubitak-logo-small {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 0 16px;
+    border-radius: 20px;
+    background: #fef2f2;
+    font-size: 0.9rem;
+}
+
+/* --- Hero Section --- */
+.landing-page-wrapper .hero-section {
+    padding-top: 140px;
+    padding-bottom: 80px;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Arka plan süslemeleri */
+.landing-page-wrapper .hero-bg-shape {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+    top: -100px;
+    right: -100px;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.landing-page-wrapper .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.landing-page-wrapper .badge-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 16px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.landing-page-wrapper .hero-text h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--text-main);
+    letter-spacing: -1px;
+}
+
+.landing-page-wrapper .hero-text h1 span {
+    color: var(--primary-color);
+    position: relative;
+}
+
+.landing-page-wrapper .university-title {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 15px;
+}
+
+.landing-page-wrapper .hero-text p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    max-width: 90%;
+    line-height: 1.7;
+}
+
+.landing-page-wrapper .project-meta {
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 40px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.landing-page-wrapper .meta-item span {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.landing-page-wrapper .meta-item strong {
+    display: block;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* --- STATİK MİMARİ GÖRSELİ (Demo Yerine) --- */
+.landing-page-wrapper .architecture-visual {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.landing-page-wrapper .arch-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #f1f5f9;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    border: 1px solid #e2e8f0;
+}
+
+.landing-page-wrapper .flow-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.landing-page-wrapper .flow-box {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    width: 140px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.landing-page-wrapper .flow-box:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.landing-page-wrapper .flow-box i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.landing-page-wrapper .flow-box h4 {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: var(--text-main);
+}
+
+.landing-page-wrapper .flow-box p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.landing-page-wrapper .flow-arrow {
+    color: #94a3b8;
+    font-size: 1.2rem;
+}
+
+.landing-page-wrapper .fusion-box {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.landing-page-wrapper .fusion-label {
+    position: absolute;
+    bottom: -25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    width: 100px;
+    text-align: center;
+}
+
+.landing-page-wrapper .result-box {
+    background: #ecfdf5;
+    border: 1px solid #34d399;
+    color: #065f46;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* --- Modüller (DenseNet / XGBoost Detay) --- */
+.landing-page-wrapper .modules-section {
+    padding: 100px 0 60px 0;
+    background: white;
+}
+
+.landing-page-wrapper .section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.landing-page-wrapper .section-title h2 {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    font-weight: 800;
+}
+
+.landing-page-wrapper .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+}
+
+.landing-page-wrapper .tech-card {
+    background: var(--bg-body);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    border: 1px solid transparent;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-page-wrapper .tech-card:hover {
+    border-color: #cbd5e1;
+    background: white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.landing-page-wrapper .icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 24px;
+}
+
+/* Renkler */
+.landing-page-wrapper .bg-blue {
+    background: #eff6ff;
+    color: var(--primary-color);
+}
+
+.landing-page-wrapper .bg-green {
+    background: #f0fdf4;
+    color: var(--secondary-color);
+}
+
+.landing-page-wrapper .bg-purple {
+    background: #f5f3ff;
+    color: var(--accent-color);
+}
+
+.landing-page-wrapper .tech-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    color: var(--text-main);
+}
+
+.landing-page-wrapper .tech-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* --- Teknolojik Altyapı Bölümü --- */
+.landing-page-wrapper .tech-stack-section {
+    padding: 60px 0 100px 0;
+    background: white;
+}
+
+.landing-page-wrapper .stack-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    text-align: center;
+}
+
+.landing-page-wrapper .stack-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.3s;
+}
+
+.landing-page-wrapper .stack-item:hover {
+    transform: translateY(-5px);
+}
+
+.landing-page-wrapper .stack-icon {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+}
+
+.landing-page-wrapper .stack-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.landing-page-wrapper .stack-desc {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* Marka Renkleri */
+.landing-page-wrapper .color-react {
+    color: #61DAFB;
+}
+
+.landing-page-wrapper .color-node {
+    color: #8CC84B;
+}
+
+.landing-page-wrapper .color-python {
+    color: #FFD43B;
+}
+
+.landing-page-wrapper .color-mysql {
+    color: #4479A1;
+}
+
+.landing-page-wrapper .color-security {
+    color: #10b981;
+}
+
+/* --- Footer --- */
+.landing-page-wrapper footer {
+    background: #0f172a;
+    color: white;
+    padding: 80px 0 40px;
+}
+
+.landing-page-wrapper .footer-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 60px;
+}
+
+.landing-page-wrapper .footer-brand h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.landing-page-wrapper .footer-info h4 {
+    margin-bottom: 24px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.landing-page-wrapper .team-list li {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.landing-page-wrapper .team-avatar {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.landing-page-wrapper .login-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.landing-page-wrapper .login-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .landing-page-wrapper .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .landing-page-wrapper .architecture-visual {
+        padding: 30px 20px;
+    }
+
+    .landing-page-wrapper .flow-container {
+        flex-wrap: wrap;
+    }
+
+    .landing-page-wrapper .footer-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .landing-page-wrapper .nav-links {
+        display: none;
+    }
+
+    .landing-page-wrapper .stack-grid {
+        flex-direction: column;
+        gap: 50px;
+    }
+}
