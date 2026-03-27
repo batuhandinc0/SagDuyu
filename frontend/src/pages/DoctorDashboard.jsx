@@ -5,7 +5,7 @@ import Patients from './doctor/Patients';
 import AIAnalysis from './doctor/AIAnalysis';
 import LabResults from './doctor/LabResults';
 import Settings from './doctor/Settings';
-
+import SmartCheckup from './doctor/SmartCheckup';
 const DoctorDashboard = () => {
     return (
         <div className="flex min-h-screen bg-background">
@@ -16,6 +16,7 @@ const DoctorDashboard = () => {
                     <Route path="/patients" element={<Patients />} />
                     <Route path="/ai-analysis" element={<AIAnalysis />} />
                     <Route path="/lab-results" element={<LabResults />} />
+                    <Route path="/lab-analysis" element={<SmartCheckup />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
             </main>

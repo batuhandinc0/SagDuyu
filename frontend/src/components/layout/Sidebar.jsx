@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, TestTube, BrainCircuit, Settings, LogOut, Pill, CalendarDays } from 'lucide-react';
+import { LayoutDashboard, Users, TestTube, BrainCircuit, Settings, LogOut, Pill, CalendarDays, Activity } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ThemeToggle from '../ThemeToggle';
 
@@ -11,6 +11,7 @@ const Sidebar = ({ role }) => {
         { path: '/doctor', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
         { path: '/doctor/patients', icon: <Users size={20} />, label: 'Hasta Yönetimi' },
         { path: '/doctor/lab-results', icon: <TestTube size={20} />, label: 'Tahlil Sonuçları' },
+        { path: '/doctor/lab-analysis', icon: <Activity size={20} />, label: 'Lab Analiz' },
         { path: '/doctor/ai-analysis', icon: <BrainCircuit size={20} />, label: 'Multimodal AI' },
         { path: '/doctor/settings', icon: <Settings size={20} />, label: 'Ayarlar' },
     ];

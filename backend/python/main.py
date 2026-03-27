@@ -5,6 +5,8 @@ import joblib
 import os
 import xgboost as xgb
 from fastapi.middleware.cors import CORSMiddleware
+from lab_inference import LabAnalysisRequest, predict_lab_severity, metadata as lab_metadata
+import subprocess
 
 app = FastAPI()
 
@@ -146,6 +148,30 @@ async def predict_pneumonia(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error processing image: {str(e)}")
+
+# --- Lab Analysis Endpoints ---
+
+@app.post("/api/lab-analysis/predict")
+def predict_cbc(data: LabAnalysisRequest):
+    try:
+        return predict_lab_severity(data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/lab-analysis/model-info")
+def get_lab_model_info():
+    if lab_metadata is None:
+        raise HTTPException(status_code=404, detail="Model metadata not found")
+    return lab_metadata
+
+@app.post("/api/lab-analysis/retrain")
+def retrain_lab_model():
+    script_path = os.path.join(os.path.dirname(__file__), "train_lab_model.py")
+    try:
+        subprocess.Popen(["python", script_path])
+        return {"message": "Training started in background"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to start training: {e}")
 
 if __name__ == "__main__":
     import uvicorn
