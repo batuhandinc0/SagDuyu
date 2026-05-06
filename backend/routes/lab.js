@@ -141,6 +141,29 @@ router.post('/predict/:type',
         labResultData.fileUrl = `/uploads/lab-results/${req.file.filename}`;
         labResultData.fileName = req.file.originalname;
 
+      } else if (type === 'multimodal-fusion') {
+        const { clinical_risk, image_risk } = req.body;
+        
+        if (clinical_risk === undefined || image_risk === undefined) {
+          return res.status(400).json({ message: 'Klinik ve Görüntü risk skorları eksik.' });
+        }
+
+        try {
+          const response = await axios.post('http://localhost:8000/predict/multimodal-fusion', {
+            clinical_risk: parseFloat(clinical_risk),
+            image_risk: parseFloat(image_risk)
+          });
+          aiResponse = response.data;
+        } catch (err) {
+          console.error('Python Service Error:', err.message);
+          return res.status(503).json({ success: false, message: 'AI servisine erişilemiyor.' });
+        }
+
+        labResultData.testType = 'Multimodal AI Analizi (SafeNet)';
+        labResultData.testName = 'SafeNet Karar Füzyonu';
+        labResultData.resultSummary = `Nihai Karar: ${aiResponse.decision}, Final Risk: %${(aiResponse.final_risk_score * 100).toFixed(1)}`;
+        labResultData.detailedResults = aiResponse;
+
       } else {
         return res.status(400).json({ success: false, message: 'Geçersiz model tipi.' });
       }

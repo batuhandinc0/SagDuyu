@@ -1,49 +1,75 @@
 # SagDuyu - Sağlık Yönetim Sistemi
 
-Modern, güvenli ve kullanıcı dostu bir sağlık yönetim sistemi. Doktorlar ve hastalar için kapsamlı bir platform.
+Modern, güvenli ve kullanıcı dostu bir sağlık yönetim sistemi. Doktorlar, hastalar ve sağlık kuruluşları için yapay zeka destekli kapsamlı bir platform.
 
 ## 🚀 Özellikler
 
-### Doktor Özellikleri
-- ✅ Hasta yönetimi ve profiller
-- ✅ Tahlil sonuçları ekleme ve yönetimi
-- ✅ Randevu takibi ve yönetimi
-- ✅ Dashboard istatistikleri
-- ✅ Hasta geçmişi görüntüleme
+### 🧠 Yapay Zeka (AI) Modülleri ve Model Performansları
 
-### Hasta Özellikleri  
-- ✅ Profil yönetimi ve kişisel bilgiler
-- ✅ Tahlil sonuçlarını görüntüleme
-- ✅ Randevu alma ve takip etme
-- ✅ Sağlık geçmişi görüntüleme
-- ✅ Dashboard ile sağlık durumu takibi
+SagDuyu platformu, tanı ve klinik karar destek süreçlerini güçlendirmek amacıyla en güncel yapay zeka modelleriyle donatılmıştır:
 
-### Güvenlik Özellikleri
-- 🔐 JWT Token tabanlı kimlik doğrulama
-- 🔐 Şifre hashing (bcryptjs)
-- 🔐 CORS koruması
-- 🔐 Rate limiting
-- 🔐 Helmet.js güvenlik başlıkları
-- 🔐 Input validasyonu ve sanitization
+**1. Kalp Hastalığı Risk Tahmin Modeli (XGBoost)**
+- **Algoritma:** XGBoost (Extreme Gradient Boosting)
+- **Doğruluk Oranı (Accuracy):** %85.25 (0.8525)
+- **ROC-AUC Skoru:** 0.9181
+- **Karışıklık Matrisi (Confusion Matrix):** Doğru Negatif (25), Yanlış Pozitif (4), Yanlış Negatif (5), Doğru Pozitif (27)
+- **Kullanım Amacı:** Hastanın klinik verilerini (yaş, cinsiyet, tansiyon, kolesterol, fbs, EKG sonuçları vb.) kullanarak erken aşamada kalp hastalığı riskini yüksek doğrulukla analiz etmek.
+- **Teknik Çıktı:** Model pipeline nesnesi `heart_disease_pipeline.pkl` ve XGBoost modeli `xgboost_heart_model.json` formatında entegre edilmiştir.
+
+**2. Pnömoni (Zatürre) Tespit Modeli (DenseNet)**
+- **Algoritma:** DenseNet (Derin Öğrenme / Evrişimli Sinir Ağları - CNN)
+- **Doğruluk Oranı (Test Accuracy):** %89.42 (0.8942)
+- **Test Kaybı (Test Loss):** 0.2738
+- **Kullanım Amacı:** Tıbbi görüntüleme (Röntgen / X-Ray) verileri üzerinden pnömoni bulgularını saptamak.
+- **Teknik Çıktı:** Eğitilmiş ağırlıklar `densenet_pneumonia_model.h5` dosyası üzerinden çalışmaktadır.
+
+**3. Akıllı Check-up (Kural Tabanlı Yorumlama Motoru)**
+- **Klinik Analiz & Risk Skorlama:** Hastanın laboratuvar sonuçlarını (Hb, WBC, PLT vb.) analiz ederek referans değerlerle kıyaslar. Anormallikleri tespit eder ve görsel referans çubuklarıyla (horizontal bars) hastanın durumunu değerlendirir.
+- **Branş Yönlendirmesi:** Sonuçlara göre hastayı birinci ve ikinci derece ilgili klinik branşlara (Konsültasyon önerileri) otomatik yönlendirir.
+
+
+### 👨‍⚕️ Doktor Özellikleri
+- ✅ Yapay zeka destekli laboratuvar ve görüntüleme analizleri
+- ✅ Detaylı hasta yönetimi ve profil görüntüleme
+- ✅ Tahlil sonuçları ekleme, yorumlama ve yönetimi
+- ✅ Randevu takibi, onay/iptal süreçleri
+- ✅ Dashboard üzerinde anlık hasta ve randevu istatistikleri
+- ✅ Hasta geçmişi ve kronik rahatsızlık takibi
+
+### 🧑‍🦱 Hasta Özellikleri  
+- ✅ Profil yönetimi, demografik ve klinik (boy, kilo, kan grubu) bilgiler
+- ✅ Tahlil sonuçlarını yapay zeka analizleriyle (Akıllı Check-up) detaylı görüntüleme
+- ✅ Randevu alma ve durumunu takip etme
+- ✅ Sağlık geçmişi (alerjiler, geçirilmiş hastalıklar) kayıtları
+- ✅ Dashboard ile sağlık verilerinin grafiksel takibi
+
+### 🔒 Güvenlik Özellikleri
+- 🔐 JWT (JSON Web Token) tabanlı güvenli kimlik doğrulama
+- 🔐 Şifre şifreleme (bcryptjs, 12 round hash)
+- 🔐 API CORS koruması
+- 🔐 İstek sınırlayıcı (Rate limiting)
+- 🔐 Helmet.js ile gelişmiş HTTP güvenlik başlıkları
+- 🔐 Girdi doğrulama (Input validation) ve sanitizasyon (XSS ve SQL Injection koruması)
 
 ## 🛠 Teknoloji Stack
 
 ### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MySQL** - Veritabanı
-- **Sequelize** - ORM (Object-Relational Mapping)
-- **JWT** - JSON Web Tokens
-- **bcryptjs** - Password hashing
-- **Multer** - File upload handling
+- **Node.js & Express.js** - Sunucu ve API Altyapısı
+- **MySQL & Sequelize ORM** - Veritabanı ve Nesne İlişkisel Eşleme
+- **JWT & bcryptjs** - Kimlik doğrulama ve şifreleme
+- **Multer** - Güvenli dosya ve görüntü yükleme
+- **Python / Flask (Opsiyonel)** - Yapay zeka servisleri ile etkileşim için
 
 ### Frontend
-- **React** - UI framework
-- **Vite** - Build tool
-- **Tailwind CSS** - Utility-first CSS framework
-- **React Icons** - Icon library
-- **Axios** - HTTP client
-- **React Hooks** - State management
+- **React (Hooks) & Vite** - Yüksek performanslı kullanıcı arayüzü
+- **Tailwind CSS** - Modern ve esnek stil sistemi
+- **React Icons** - Görsel simge kütüphanesi
+- **Axios** - RESTful API istemcisi
+
+### Yapay Zeka (AI)
+- **Python, Pandas, Scikit-Learn** - Veri işleme
+- **XGBoost** - Makine Öğrenmesi (Tabular veriler)
+- **TensorFlow / Keras (DenseNet)** - Derin Öğrenme (Görüntü İşleme)
 
 ## 📦 Kurulum
 
@@ -84,10 +110,10 @@ CREATE DATABASE tubitak_sagduyu CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 
 5. **Uygulamayı başlatın:**
 ```bash
-# Development
+# Development (Geliştirme)
 npm run dev
 
-# Production
+# Production (Canlı)
 npm start
 ```
 
@@ -113,212 +139,48 @@ npm run dev
 ### Tablolar
 
 #### `users`
-- `id` - Primary key
-- `email` - E-posta adresi (unique)
-- `password` - Hash'li şifre
-- `role` - Kullanıcı rolü (doctor/patient)
-- `isActive` - Hesap durumu
-- `lastLogin` - Son giriş tarihi
-- `createdAt`, `updatedAt` - Timestamps
+- `id`, `email` (unique), `password` (hash), `role` (doctor/patient), `isActive`, `lastLogin`, `createdAt`, `updatedAt`
 
 #### `doctors`
-- `id` - Primary key
-- `userId` - Foreign key to users
-- `fullName` - Ad Soyad
-- `branch` - Uzmanlık alanı
-- `hospitalName` - Hastane adı
-- `phone` - Telefon numarası
-- `licenseNumber` - Doktor lisans no (opsiyonel)
-- `experience` - Deneyim yılı
-- `isVerified` - Doğrulama durumu
+- `id`, `userId` (FK), `fullName`, `branch`, `hospitalName`, `phone`, `licenseNumber`, `experience`, `isVerified`
 
 #### `patients`
-- `id` - Primary key
-- `userId` - Foreign key to users
-- `fullName` - Ad Soyad
-- `tcNo` - TC Kimlik No (unique)
-- `birthDate` - Doğum tarihi
-- `bloodType` - Kan grubu
-- `height` - Boy (cm)
-- `weight` - Kilo (kg)
-- `gender` - Cinsiyet
-- `address` - Adres
-- `emergencyContact` - Acil durum kişisi
-- `emergencyPhone` - Acil durum telefonu
-- `allergies` - Alerjiler
-- `chronicDiseases` - Kronik hastalıklar
+- `id`, `userId` (FK), `fullName`, `tcNo` (unique), `birthDate`, `bloodType`, `height`, `weight`, `gender`, `address`, `emergencyContact`, `emergencyPhone`, `allergies`, `chronicDiseases`
 
 #### `lab_results`
-- `id` - Primary key
-- `patientId` - Foreign key to patients
-- `doctorId` - Foreign key to doctors
-- `testType` - Test türü
-- `testName` - Test adı
-- `resultSummary` - Sonuç özeti
-- `detailedResults` - Detaylı sonuçlar (JSON)
-- `fileUrl` - Dosya yolu
-- `fileName` - Dosya adı
-- `testDate` - Test tarihi
-- `resultDate` - Sonuçlanma tarihi
-- `status` - Durum (pending/in_progress/completed/reviewed)
-- `priority` - Öncelik
-- `notes` - Doktor notları
-- `isConfidential` - Gizli sonuç
+- `id`, `patientId` (FK), `doctorId` (FK), `testType`, `testName`, `resultSummary`, `detailedResults` (JSON), `fileUrl`, `fileName`, `testDate`, `resultDate`, `status`, `priority`, `notes`, `isConfidential`
 
 #### `appointments`
-- `id` - Primary key
-- `patientId` - Foreign key to patients
-- `doctorId` - Foreign key to doctors
-- `appointmentDate` - Randevu tarihi
-- `duration` - Süre (dakika)
-- `status` - Durum
-- `appointmentType` - Randevu türü
-- `reason` - Sebep
-- `notes` - Notlar
-- `prescription` - Reçete
-- `diagnosis` - Tanı
-- `treatment` - Tedavi planı
-- `followUpRequired` - Takip gerekli mi
-- `followUpDate` - Takip tarihi
-- `cancelledAt` - İptal tarihi
-- `cancellationReason` - İptal sebebi
+- `id`, `patientId` (FK), `doctorId` (FK), `appointmentDate`, `duration`, `status`, `appointmentType`, `reason`, `notes`, `prescription`, `diagnosis`, `treatment`, `followUpRequired`, `followUpDate`, `cancelledAt`, `cancellationReason`
 
 ## 🔌 API Endpoints
 
 ### Authentication
-```
-POST /api/auth/register    - Kullanıcı kaydı
-POST /api/auth/login       - Kullanıcı girişi
-POST /api/auth/refresh-token - Token yenileme
-GET  /api/auth/me          - Kullanıcı bilgileri
-```
+- `POST /api/auth/register` - Kullanıcı kaydı
+- `POST /api/auth/login` - Kullanıcı girişi
+- `POST /api/auth/refresh-token` - Token yenileme
+- `GET /api/auth/me` - Kullanıcı bilgileri
 
 ### User Management
-```
-GET  /api/user/profile     - Profil bilgileri
-PUT  /api/user/profile     - Profil güncelle
-GET  /api/user/dashboard   - Dashboard istatistikleri
-PUT  /api/user/change-password - Şifre değiştir
-DELETE /api/user/account   - Hesabı deaktif et
-POST /api/user/reactivate  - Hesabı yeniden aktif et
-```
+- `GET /api/user/profile` - Profil bilgileri
+- `PUT /api/user/profile` - Profil güncelle
+- `GET /api/user/dashboard` - Dashboard istatistikleri
+- `PUT /api/user/change-password` - Şifre değiştir
+- `DELETE /api/user/account` - Hesabı deaktif et
 
-### Lab Results
-```
-POST /api/labs             - Yeni tahlil ekle (doktor)
-GET  /api/labs/my-results  - Kendi tahliller (hasta)
-GET  /api/labs/pending     - Bekleyen tahliller (doktor)
-GET  /api/labs/:id         - Tahlil detayı
-PUT  /api/labs/:id         - Tahlil güncelle (doktor)
-DELETE /api/labs/:id       - Tahlil sil (doktor)
-GET  /api/labs/patient/:patientId - Hastaya ait tahliller (doktor)
-```
-
-## 🎨 Frontend Kullanımı
-
-### AuthModal Bileşeni
-
-```jsx
-import AuthModal from './components/AuthModal';
-import Navbar from './components/Navbar';
-
-function App() {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
-  const handleLogin = (userData, token) => {
-    setUser(userData);
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setIsAuthModalOpen(false);
-  };
-
-  return (
-    <div>
-      <Navbar 
-        onLoginClick={() => setIsAuthModalOpen(true)}
-        user={user}
-        onLogout={() => {
-          localStorage.clear();
-          setUser(null);
-        }}
-      />
-      
-      <AuthModal 
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onLogin={handleLogin}
-      />
-    </div>
-  );
-}
-```
-
-### Navbar'da Kullanım
-
-```jsx
-import { FiUser, FiLogOut } from 'react-icons/fi';
-
-const Navbar = ({ user, onLoginClick, onLogout }) => {
-  return (
-    <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-blue-600">SagDuyu</h1>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <div className="flex items-center space-x-2">
-                <FiUser className="w-5 h-5" />
-                <span>{user.profile.fullName}</span>
-                <button onClick={onLogout}>
-                  <FiLogOut className="w-5 h-5" />
-                </button>
-              </div>
-            ) : (
-              <button 
-                onClick={onLoginClick}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Giriş Yap
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-};
-```
-
-## 🔒 Güvenlik
-
-### Authentication Flow
-1. Kullanıcı giriş yapar
-2. Backend JWT token oluşturur
-3. Token frontend'de localStorage'a kaydedilir
-4. Her API isteğinde Authorization header ile token gönderilir
-5. Middleware token'ı doğrular ve kullanıcı bilgilerini req.user'a ekler
-
-### Password Security
-- bcryptjs ile 12 round hash'leme
-- Minimum 6 karakter şartı
-- En az bir büyük harf, bir küçük harf ve bir rakam gereksinimi
-
-### Input Validation
-- express-validator ile server-side validation
-- Client-side React validation
-- XSS koruması
-- SQL injection koruması (Sequelize ORM)
+### Lab Results & AI
+- `POST /api/labs` - Yeni tahlil ekle (doktor)
+- `GET /api/labs/my-results` - Kendi tahlilleri ve **Akıllı Check-up** analizleri (hasta)
+- `GET /api/labs/pending` - Bekleyen tahliller (doktor)
+- `GET /api/labs/:id` - Tahlil detayı
+- `PUT /api/labs/:id` - Tahlil güncelle (doktor)
 
 ## 🚀 Deployment
 
 ### Backend Deployment
-1. Environment variables'ları production için ayarlayın
-2. MySQL veritabanını production server'da oluşturun
-3. PM2 ile process management kurun:
+1. Environment variables'ları production için ayarlayın.
+2. MySQL veritabanını production sunucuda oluşturun.
+3. PM2 ile süreci yönetin:
 ```bash
 npm install -g pm2
 pm2 start server.js --name sagduyu-backend
@@ -329,55 +191,17 @@ pm2 start server.js --name sagduyu-backend
 ```bash
 npm run build
 ```
-2. Build klasörünü web server'a yükleyin
+2. Build klasörünü yapılandırılmış (Nginx vb.) web server'a yükleyin.
 
 ## 📝 Geliştirme Notları
-
-### Kodlama Standartları
-- ESLint ve Prettier kullanın
-- Semantic commit messages
-- Code review süreci
-- Unit test yazımı
-
-### Database Migration
-```bash
-# Sequelize sync (development)
-npm run migrate
-
-# Production'da manual migration önerilir
-```
-
-### Error Handling
-- Tüm API endpoints hata yakalama içerir
-- User-friendly error messages
-- Server logs için console.error kullanımı
-- 404 ve 500 error handlers
-
-### Performance Optimization
-- Database indexing
-- Query optimization
-- Caching strategies
-- File compression
-- Image optimization
-
-## 🤝 Katkıda Bulunma
-
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit edin (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
+- Kodlama standartları için **ESLint** ve **Prettier** yapılandırmaları aktiftir.
+- Anlamlı (Semantic) commit mesajları kullanılmalıdır.
+- Performans iyileştirmesi (Performance Optimization) için Database indexing ve Query optimization uygulanmıştır.
 
 ## 📄 Lisans
-
 Bu proje MIT lisansı altında lisanslanmıştır.
 
 ## 📞 İletişim
-
-- **Proje Sahibi**: SagDuyu Team
-- **E-posta**: support@sagduyu.com
+- **Proje Sahibi**: Batuhan Dinç
+- **E-posta**: batuhandinc@sagduyu.com
 - **Website**: https://sagduyu.com
-
-## 🙏 Teşekkürler
-
-Bu projeyi geliştirmek için katkıda bulunan tüm geliştiricilere teşekkürlerimizi sunarız.

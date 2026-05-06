@@ -45,14 +45,17 @@ def predict_heart_disease(data: HeartDiseaseInput):
         raise HTTPException(status_code=500, detail="Model not loaded")
 
     try:
-        # Parse input string "57,0,0,140,241,0,1,123,1,0.2,1,0,3,0"
+        # Parse input string "57,0,0,140,241,0,1,123,1,0.2,1,0,3"
         # Expected columns based on training data:
         # age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal
         
-        values = [float(x.strip()) for x in data.input_string.split(',')]
+        try:
+            values = [float(x.strip()) for x in data.input_string.split(',')]
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Lütfen tüm değerlerin sadece rakamlardan ve virgüllerden oluştuğuna emin olun.")
         
         if len(values) < 13:
-             raise HTTPException(status_code=400, detail=f"Expected at least 13 values, got {len(values)}")
+             raise HTTPException(status_code=400, detail=f"13 adet değer bekleniyor, ancak {len(values)} adet girildi.")
         
         # Feature names must match training data
         feature_names = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
@@ -83,8 +86,10 @@ def predict_heart_disease(data: HeartDiseaseInput):
             "model_version": "improved_v2"
         }
 
+    except HTTPException as he:
+        raise he
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error processing input: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Veri işlenirken beklenmeyen bir hata oluştu: {str(e)}")
 
 # --- DenseNet Model Integration ---
 DENSENET_MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../artificial intelligence/models/densenet_pneumonia_model.h5')
@@ -148,6 +153,56 @@ async def predict_pneumonia(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error processing image: {str(e)}")
+
+# --- SafeNet Multimodal Fusion Endpoint ---
+
+class MultimodalFusionInput(BaseModel):
+    clinical_risk: float
+    image_risk: float
+
+@app.post("/predict/multimodal-fusion")
+def predict_multimodal_fusion(data: MultimodalFusionInput):
+    clinical_risk = data.clinical_risk
+    image_risk = data.image_risk
+    
+    # 1. Base Weighted Average (Late Fusion)
+    # Give clinical data 60% weight and image 40% weight
+    base_risk = (clinical_risk * 0.6) + (image_risk * 0.4)
+    
+    # 2. SafeNet Penalty (Conflict Resolution)
+    safenet_used = True
+    safenet_status = "Modeller Uyumlu - Rutin Füzyon Uygulandı"
+    penalty = 0.0
+    
+    # If there's a significant disagreement (e.g. > 0.4 difference)
+    if abs(clinical_risk - image_risk) > 0.4:
+        safenet_status = "SafeNet Uyarısı: Modeller arası kritik uyumsuzluk tespit edildi. Sistem güvenliği gereği risk skoru yüksek tutulmuştur."
+        penalty = 0.20 # Add 20% penalty
+        
+    final_risk = base_risk + penalty
+    
+    # 3. Safety Net Threshold
+    # The final risk cannot be lower than 80% of the maximum individual risk
+    min_safe_risk = max(clinical_risk, image_risk) * 0.8
+    if final_risk < min_safe_risk:
+        final_risk = min_safe_risk
+        
+    # Cap at 1.0
+    final_risk = min(final_risk, 1.0)
+    
+    if final_risk >= 0.7:
+        decision = "Kritik Risk - Uzman Hekim İncelemesi Şarttır"
+    elif final_risk >= 0.4:
+        decision = "Orta Risk - Gözlem ve Ek Tetkik Önerilir"
+    else:
+        decision = "Düşük Risk - Sağlıklı Profil"
+        
+    return {
+        "final_risk_score": final_risk,
+        "safenet_status": safenet_status,
+        "safenet_used": safenet_used,
+        "decision": decision
+    }
 
 # --- Lab Analysis Endpoints ---
 

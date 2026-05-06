@@ -89,9 +89,6 @@ def predict_lab_severity(data: LabAnalysisRequest) -> LabAnalysisResponse:
     prediction_num = pipeline.predict(input_df)[0]
     probabilities = pipeline.predict_proba(input_df)[0]
     
-    # Calculate Risk Score (0-100)
-    # Mapping probabilities to risk score
-    # Classes: 0: Mild, 1: Moderate, 2: Severe
     label_map = metadata['label_mapping']
     severity_label = label_map.get(str(prediction_num), label_map.get(prediction_num, "Mild"))
     
@@ -99,22 +96,75 @@ def predict_lab_severity(data: LabAnalysisRequest) -> LabAnalysisResponse:
     prob_mod = probabilities[1] if len(probabilities) > 1 else 0
     prob_sev = probabilities[2] if len(probabilities) > 2 else 0
 
-    base_score = 0
-    if severity_label == 'Mild':
-        base_score = 10 + (prob_mild * 25)
-    elif severity_label == 'Moderate':
-        base_score = 36 + (prob_mod * 29)
-    else:
-        base_score = 66 + (prob_sev * 29)
-        
-    rules_score_addition = 0
-    if data.hemoglobin < 10 or data.hemoglobin > 18:
-        rules_score_addition += 5
-    if data.wbc > 12000 or data.wbc < 3000:
-        rules_score_addition += 5
-    if data.platelet_count < 100000 or data.platelet_count > 450000:
-        rules_score_addition += 5
+    # 1. Dinamik AI Risk Skoru (0-100)
+    # Orta risk %50 etki, Şiddetli risk %100 etki yapar
+    base_score = (prob_mod * 40) + (prob_sev * 90)
 
+    # 2. Tıbbi Kural Motoru (Medical Rule Engine)
+    possible_diagnoses = []
+    recommended_tests = []
+    recommended_departments = ["Dahiliye"] # Default
+    clinical_comment = "Genel kan tablosu olağan sınırlarda görünüyor."
+    rules_score_addition = 0
+    
+    # HEMOGLOBİN DEĞERLENDİRMESİ
+    if data.hemoglobin < 10:
+        rules_score_addition += 30
+        possible_diagnoses.append("Şiddetli Anemi")
+        recommended_tests.extend(["Ferritin", "B12", "Periferik Yayma"])
+        if "Hematoloji" not in recommended_departments:
+            recommended_departments.insert(0, "Hematoloji")
+    elif data.hemoglobin < 12:
+        rules_score_addition += 10
+        possible_diagnoses.append("Hafif Anemi / Kan Düşüklüğü")
+        recommended_tests.extend(["Demir Paneli", "Ferritin"])
+    elif data.hemoglobin > 18:
+        rules_score_addition += 15
+        possible_diagnoses.append("Polisitemi (Kan Koyulaşması)")
+        recommended_tests.append("Eritropoietin (EPO)")
+        if "Hematoloji" not in recommended_departments:
+            recommended_departments.insert(0, "Hematoloji")
+
+    # WBC (LÖKOSİT) DEĞERLENDİRMESİ
+    if data.wbc > 15000:
+        rules_score_addition += 30
+        possible_diagnoses.append("Şiddetli Enfeksiyon / İnflamasyon")
+        recommended_tests.extend(["CRP", "Kan Kültürü"])
+        if "Enfeksiyon Hastalıkları" not in recommended_departments:
+            recommended_departments.insert(0, "Enfeksiyon Hastalıkları")
+    elif data.wbc > 11000:
+        rules_score_addition += 10
+        possible_diagnoses.append("Hafif Bakteriyel veya Viral Süreç")
+        recommended_tests.append("CRP")
+    elif data.wbc < 3000:
+        rules_score_addition += 20
+        possible_diagnoses.append("Lökopeni (Bağışıklık Zayıflığı)")
+        recommended_tests.append("Periferik Yayma")
+        if "Hematoloji" not in recommended_departments:
+            recommended_departments.insert(0, "Hematoloji")
+
+    # TROMBOSİT (PLATELET) DEĞERLENDİRMESİ
+    if data.platelet_count < 100000:
+        rules_score_addition += 30
+        possible_diagnoses.append("Kritik Trombositopeni (Kanama Riski)")
+        recommended_tests.extend(["Periferik Yayma", "Kanama Zamanı"])
+        if "Hematoloji" not in recommended_departments:
+            recommended_departments.insert(0, "Hematoloji")
+    elif data.platelet_count < 150000:
+        rules_score_addition += 10
+        possible_diagnoses.append("Hafif Trombositopeni")
+    elif data.platelet_count > 500000:
+        rules_score_addition += 15
+        possible_diagnoses.append("Reaktif Trombositoz")
+        recommended_tests.append("CRP")
+
+    # KLİNİK YORUMU OLUŞTUR
+    if rules_score_addition > 0:
+        clinical_comment = "Bazı kan değerlerinde normal referans aralıklarının dışında sapmalar tespit edildi. Uzman hekim değerlendirmesi önerilir."
+    if len(possible_diagnoses) == 0:
+        possible_diagnoses.append("Özgül patoloji gözlenmedi")
+
+    # FİNAL SKOR VE SEVİYE
     final_score = min(max(int(base_score + rules_score_addition), 0), 100)
     
     if final_score <= 30:
@@ -123,55 +173,6 @@ def predict_lab_severity(data: LabAnalysisRequest) -> LabAnalysisResponse:
         warning_level = "Orta Risk"
     else:
         warning_level = "Yüksek Risk"
-        
-    # Rules based clinical feedback
-    possible_diagnoses = []
-    recommended_tests = []
-    clinical_comment = "Normal CBC profili."
-    recommended_departments = ["Dahiliye"] # Default primary
-    
-    if data.hemoglobin < 12:
-        if data.mcv < 80 and data.rdw > 15:
-            possible_diagnoses.append("Demir Eksikliği Anemisi")
-            recommended_tests.extend(["Ferritin", "Iron panel", "Peripheral smear"])
-        elif data.mcv > 100:
-            possible_diagnoses.append("Makrositik Anemi")
-            recommended_tests.extend(["Vitamin B12", "Folate"])
-        else:
-            possible_diagnoses.append("Normositik Anemi")
-            recommended_tests.append("Reticulocyte count")
-        clinical_comment = "Hemoglobin düşük. Anemi belirtileri mevcut."
-        recommended_departments = ["Hematoloji", "Dahiliye"]
-        
-    if data.wbc > 11000 and data.neutrophils > 70:
-        possible_diagnoses.append("Bakteriyel Enfeksiyon")
-        recommended_tests.extend(["CRP", "ESR / Sedimantasyon"])
-        clinical_comment = "Lökosit ve nötrofil yüksekliği enfeksiyonu işaret ediyor."
-        recommended_departments = ["Enfeksiyon Hastalıkları", "Dahiliye"]
-    elif data.wbc > 10000 and data.lymphocytes > 40:
-        possible_diagnoses.append("Viral Enfeksiyon")
-        recommended_tests.append("CRP")
-        clinical_comment = "Lenfosit hakimiyeti viral bir süreç olabilir."
-        recommended_departments = ["Enfeksiyon Hastalıkları", "Dahiliye"]
-        
-    if data.platelet_count < 150000:
-        possible_diagnoses.append("Trombositopeni")
-        recommended_tests.append("Peripheral smear")
-        clinical_comment = "Trombosit düşüklüğü mevcut, kanama riski değerlendirilmeli."
-        if "Hematoloji" not in recommended_departments:
-            recommended_departments.insert(0, "Hematoloji")
-    elif data.platelet_count > 450000:
-        possible_diagnoses.append("Reaktif Trombositoz")
-        recommended_tests.append("CRP")
-        clinical_comment = "Trombosit yüksekliği inflamasyona ikincil gelişmiş olabilir."
-        
-    if data.monocytes > 10:
-        possible_diagnoses.append("Kronik İnflamasyon / İyileşme Fazı")
-        clinical_comment = "Monositoz enfeksiyon sonrası veya kronik süreçlerde görülebilir."
-        recommended_tests.append("ESR / Sedimantasyon")
-        
-    if len(possible_diagnoses) == 0:
-        possible_diagnoses.append("Özgül patoloji gözlenmedi")
         
     # Deduplicate tests
     recommended_tests = list(set(recommended_tests))
